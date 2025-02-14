@@ -16,6 +16,7 @@ const App = () => {
   const { data, loading } = useQuery(USERS);
 
   const isAuthenticated = data?.users?.length > 0;
+  console.log(isAuthenticated);
 
   if (loading) return <p>Cargando...</p>;
 
