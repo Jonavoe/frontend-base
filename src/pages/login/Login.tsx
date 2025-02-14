@@ -1,7 +1,8 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import './Login.less';
+import Logo from '../../components/Logo/Logo';
 
 const Login: React.FC = () => {
   const onFinish = (values: any) => {
@@ -10,6 +11,8 @@ const Login: React.FC = () => {
 
   return (
     <div className="container">
+      <Logo />
+      <Divider type="vertical" style={{ height: '80%' }} />
       <Form name="login" initialValues={{ remember: true }} onFinish={onFinish}>
         <Form.Item
           name="username"
