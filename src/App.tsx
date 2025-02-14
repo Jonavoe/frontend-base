@@ -15,10 +15,11 @@ const { Content } = Layout;
 const App = () => {
   const { data, loading } = useQuery(USERS);
 
-  const isAuthenticated = data?.users?.length > 0;
-  console.log(isAuthenticated);
+  const isAuthenticated = localStorage.getItem('jwt');
 
   if (loading) return <p>Cargando...</p>;
+
+  console.log(data);
 
   return (
     <Router>
