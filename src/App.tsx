@@ -58,15 +58,17 @@ const App = () => {
             />
             <Route
               path="/register"
-              element={
-                !isAuthenticated && (
-                  <Register setIsAuthenticated={setIsAuthenticated} />
-                )
-              }
+              element={!isAuthenticated && <Register />}
             />
             <Route
               path="/login"
-              element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
+              element={
+                !isAuthenticated ? (
+                  <Login setIsAuthenticated={setIsAuthenticated} />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
             />
           </Routes>
         </Content>

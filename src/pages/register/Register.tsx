@@ -7,15 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { mutation } from '../../graphql/mutations';
 
-const Register: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
-  setIsAuthenticated,
-}) => {
+const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [register] = useMutation(mutation.register); // Asumiendo que ya tienes una mutación de registro en GraphQL
+  const [register] = useMutation(mutation.register);
 
   const onFinish = async (values: any) => {
     try {
-      const { data } = await register({
+      await register({
         variables: {
           data: {
             email: values.email,
@@ -24,12 +22,9 @@ const Register: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
         },
       });
 
-      const accessToken = data.register.accessToken;
-      localStorage.setItem('jwt', accessToken);
-      setIsAuthenticated(true);
+      message.success('Registro exitoso! Ahora puedes iniciar sesión.');
 
-      navigate('/home');
-      message.success('Registro exitoso!');
+      navigate('/login');
     } catch (error: any) {
       console.error('Error de registro', error);
 

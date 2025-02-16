@@ -6,11 +6,11 @@ import Logo from '../../components/Logo/Logo';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { mutation } from '../../graphql/mutations';
-import { useAppContext } from '../../context/AppContext';
 
-const Login: React.FC = () => {
+const Login: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
+  setIsAuthenticated,
+}) => {
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUser } = useAppContext();
   const [login] = useMutation(mutation.login);
 
   const onFinish = async (values: any) => {
@@ -26,7 +26,6 @@ const Login: React.FC = () => {
 
       const accessToken = data.login.accessToken;
       localStorage.setItem('jwt', accessToken);
-      setUser(data.login.user);
       setIsAuthenticated(true);
 
       console.log(data);
