@@ -1,21 +1,21 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input, message } from 'antd';
-import './Login.less';
+import './Register.less';
 import Logo from '../../components/Logo/Logo';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { mutation } from '../../graphql/mutations';
-import { useAppContext } from '../../context/AppContext';
 
-const Login: React.FC = () => {
+const Register: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
+  setIsAuthenticated,
+}) => {
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUser } = useAppContext();
-  const [login] = useMutation(mutation.login);
+  const [register] = useMutation(mutation.register); // Asumiendo que ya tienes una mutación de registro en GraphQL
 
   const onFinish = async (values: any) => {
     try {
-      const { data } = await login({
+      const { data } = await register({
         variables: {
           data: {
             email: values.email,
@@ -24,22 +24,19 @@ const Login: React.FC = () => {
         },
       });
 
-      const accessToken = data.login.accessToken;
+      const accessToken = data.register.accessToken;
       localStorage.setItem('jwt', accessToken);
-      setUser(data.login.user);
       setIsAuthenticated(true);
 
-      console.log(data);
-
       navigate('/home');
-      message.success('Login exitoso!');
+      message.success('Registro exitoso!');
     } catch (error: any) {
-      console.error('Error de login', error);
+      console.error('Error de registro', error);
 
-      if (error.message.includes('Unauthorized')) {
-        message.error('Credenciales incorrectas, por favor intenta de nuevo.');
+      if (error.message.includes('Email already exists')) {
+        message.error('Este email ya está registrado.');
       } else {
-        message.error('Hubo un error al intentar iniciar sesión.');
+        message.error('Hubo un error al intentar registrarte.');
       }
     }
   };
@@ -48,7 +45,11 @@ const Login: React.FC = () => {
     <div className="container">
       <Logo />
       <Divider type="vertical" style={{ height: '80%' }} />
-      <Form name="login" initialValues={{ remember: true }} onFinish={onFinish}>
+      <Form
+        name="register"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+      >
         <Form.Item
           name="email"
           rules={[{ required: true, message: 'Ingresa tu email!' }]}
@@ -68,13 +69,13 @@ const Login: React.FC = () => {
 
         <Form.Item>
           <Button block type="primary" htmlType="submit">
-            Ingresa
+            Regístrate
           </Button>
-          o <Link to={'/register'}>¡Regístrate ahora!</Link>
+          o <a href="/login">¡Inicia sesión ahora!</a>
         </Form.Item>
       </Form>
     </div>
   );
 };
 
-export default Login;
+export default Register;

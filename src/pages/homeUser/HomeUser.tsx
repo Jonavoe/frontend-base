@@ -1,9 +1,9 @@
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-import './Home.less';
+import './HomeUser.less';
 
-const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
+const HomeUser: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
   setIsAuthenticated,
 }) => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
 
   return (
     <div className="container">
-      <h1>Home</h1>
+      <h1>HomeUser</h1>
       <Button type="primary" onClick={handleLogout}>
         Logout
       </Button>
@@ -24,4 +24,4 @@ const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
   );
 };
 
-export default Home;
+export default HomeUser;

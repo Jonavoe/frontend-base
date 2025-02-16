@@ -1,3 +1,7 @@
-export * from './login';
-export * from './register';
-export * from './updateUser';
+import { LOGIN } from './login';
+import { REGISTER } from './register';
+
+export const mutation = {
+  login: LOGIN,
+  register: REGISTER,
+};
