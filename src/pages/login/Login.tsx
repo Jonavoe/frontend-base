@@ -6,10 +6,12 @@ import Logo from '../../components/Logo/Logo';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { mutation } from '../../graphql/mutations';
+import { useUser } from '../../context/AppContext';
 
 const Login: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
   setIsAuthenticated,
 }) => {
+  const { setUser } = useUser();
   const navigate = useNavigate();
   const [login] = useMutation(mutation.login);
 
@@ -23,13 +25,10 @@ const Login: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
           },
         },
       });
-
       const accessToken = data.login.accessToken;
       localStorage.setItem('jwt', accessToken);
       setIsAuthenticated(true);
-
-      console.log(data);
-
+      setUser(data.login.user);
       navigate('/home');
       message.success('Login exitoso!');
     } catch (error: any) {

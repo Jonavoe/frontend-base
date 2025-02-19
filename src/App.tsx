@@ -10,6 +10,7 @@ import Login from './pages/login/Login';
 import Home from './pages/home/Home';
 import Register from './pages/register/Register';
 import HomeUser from './pages/homeUser/HomeUser';
+import { UserProvider } from './context/AppContext';
 
 const { Content } = Layout;
 
@@ -31,49 +32,51 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <Layout>
-        <Content>
-          <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route
-              path="/home"
-              element={
-                isAuthenticated ? (
-                  <Home setIsAuthenticated={setIsAuthenticated} />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/home-user"
-              element={
-                isAuthenticated ? (
-                  <HomeUser setIsAuthenticated={setIsAuthenticated} />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/register"
-              element={!isAuthenticated && <Register />}
-            />
-            <Route
-              path="/login"
-              element={
-                !isAuthenticated ? (
-                  <Login setIsAuthenticated={setIsAuthenticated} />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-          </Routes>
-        </Content>
-      </Layout>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Layout>
+          <Content>
+            <Routes>
+              <Route path="/" element={<Navigate to="/home" />} />
+              <Route
+                path="/home"
+                element={
+                  isAuthenticated ? (
+                    <Home setIsAuthenticated={setIsAuthenticated} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/home-user"
+                element={
+                  isAuthenticated ? (
+                    <HomeUser setIsAuthenticated={setIsAuthenticated} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/register"
+                element={!isAuthenticated && <Register />}
+              />
+              <Route
+                path="/login"
+                element={
+                  !isAuthenticated ? (
+                    <Login setIsAuthenticated={setIsAuthenticated} />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+            </Routes>
+          </Content>
+        </Layout>
+      </Router>
+    </UserProvider>
   );
 };
 

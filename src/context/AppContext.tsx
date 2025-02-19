@@ -1,39 +1,34 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface User {
+  id: string;
   email: string;
-  name: string;
   role: string;
 }
 
-interface AppContextProps {
+interface UserContextType {
   user: User | null;
-  isAuthenticated: boolean;
   setUser: (user: User | null) => void;
-  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
-const AppContext = createContext<AppContextProps | undefined>(undefined);
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const useAppContext = () => {
-  const context = useContext(AppContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
   if (!context) {
-    throw new Error('useAppContext must be used within an AppContextProvider');
+    throw new Error('useUser debe usarse dentro de un UserProvider');
   }
   return context;
 };
 
-export const AppContextProvider: React.FC<{ children: ReactNode }> = ({
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   return (
-    <AppContext.Provider
-      value={{ user, isAuthenticated, setUser, setIsAuthenticated }}
-    >
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
-    </AppContext.Provider>
+    </UserContext.Provider>
   );
 };

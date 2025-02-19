@@ -5,7 +5,9 @@ export const USERS = gql`
     users {
       id
       email
-      password
+      name
+      lastname
+      document
     }
   }
 `;
