@@ -5,8 +5,9 @@ import { useMutation } from '@apollo/client';
 interface DeleteUserModalProps {
   visible: boolean;
   onClose: () => void;
-  onDelete: (id: number) => void;
+  onDelete: () => void;
   user: { id: number; email: string } | null;
+  refetchUsers: () => void;
 }
 
 const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
@@ -14,13 +15,20 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
   onClose,
   onDelete,
   user,
+  refetchUsers,
 }) => {
   const [deleteUser] = useMutation(mutation.delete);
-  const handleDelete = () => {
+
+  const handleDelete = async () => {
     if (user) {
-      onDelete(user.id);
-      deleteUser({ variables: { id: user.id } });
-      onClose();
+      try {
+        await deleteUser({ variables: { id: user.id } });
+        onDelete();
+        onClose();
+        refetchUsers();
+      } catch (error) {
+        console.error('Error al eliminar el usuario:', error);
+      }
     }
   };
 

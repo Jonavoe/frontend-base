@@ -9,8 +9,9 @@ import EditUserModal from '../../components/User/EditUserModal';
 import DeleteUserModal from '../../components/User/DeleteUserModal';
 import { IUser } from '../../interface/User';
 import CreateUserModal from '../../components/User/CreateUserModal';
+import CustomHeader from '../../components/CustomHeader';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
   setIsAuthenticated,
@@ -30,6 +31,10 @@ const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
     localStorage.removeItem('jwt');
     setIsAuthenticated(false);
     navigate('/login');
+  };
+
+  const handleHomeUser = () => {
+    navigate('/home-user');
   };
 
   const handleEdit = (user: IUser) => {
@@ -80,42 +85,34 @@ const Home: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
 
   return (
     <Layout>
-      <Header
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1">Home</Menu.Item>
-        </Menu>
-        <div>
-          <Button
-            type="primary"
-            onClick={handleCreateUser}
-            style={{ marginRight: '10px' }}
-          >
-            Nuevo Usuario
-          </Button>
-          <Button type="primary" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-      </Header>
+      <CustomHeader
+        handleLogout={handleLogout}
+        handleHomeUser={handleHomeUser}
+        userRole={user?.role}
+        handleCreateUser={handleCreateUser}
+      />
       <Content style={{ padding: '20px' }}>
         <h1>Bienvenido, {user?.email}</h1>
-        <Table dataSource={data?.users || []} columns={columns} rowKey="id" />
+        <Table
+          dataSource={data?.users || []}
+          columns={columns}
+          rowKey="id"
+          pagination={{
+            position: ['bottomCenter'],
+          }}
+        />
         <EditUserModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           user={selectedUser}
+          refetchUsers={refetch}
         />
         <DeleteUserModal
           visible={deleteModalVisible}
           onClose={() => setDeleteModalVisible(false)}
           onDelete={handleDeleteConfirmed}
           user={selectedUser}
+          refetchUsers={refetch}
         />
         <CreateUserModal
           visible={createModalVisible}

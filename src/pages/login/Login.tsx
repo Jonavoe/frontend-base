@@ -3,7 +3,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input, message } from 'antd';
 import './Login.less';
 import Logo from '../../components/Logo/Logo';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { mutation } from '../../graphql/mutations';
 import { useUser } from '../../context/AppContext';
@@ -29,13 +29,17 @@ const Login: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
       localStorage.setItem('jwt', accessToken);
       setIsAuthenticated(true);
       setUser(data.login.user);
-      navigate('/home');
+      if (data.login.user.role === 'ADMIN') {
+        navigate('/home');
+      } else {
+        navigate('/home-user');
+      }
       message.success('Login exitoso!');
     } catch (error: any) {
       console.error('Error de login', error);
 
-      if (error.message.includes('Unauthorized')) {
-        message.error('Credenciales incorrectas, por favor intenta de nuevo.');
+      if (error.message === 'Credenciales incorrectas') {
+        message.error('Contraseña incorrecta, por favor intenta de nuevo.');
       } else {
         message.error('Hubo un error al intentar iniciar sesión.');
       }
@@ -68,7 +72,6 @@ const Login: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
           <Button block type="primary" htmlType="submit">
             Ingresa
           </Button>
-          o <Link to={'/register'}>¡Regístrate ahora!</Link>
         </Form.Item>
       </Form>
     </div>

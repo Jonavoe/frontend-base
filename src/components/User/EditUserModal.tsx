@@ -8,12 +8,14 @@ interface UserModalProps {
   visible: boolean;
   onClose: () => void;
   user: IUser | null;
+  refetchUsers: () => void;
 }
 
 const EditUserModal: React.FC<UserModalProps> = ({
   visible,
   onClose,
   user,
+  refetchUsers,
 }) => {
   const [userData, setUserData] = useState<IUser>({
     id: 0,
@@ -35,6 +37,7 @@ const EditUserModal: React.FC<UserModalProps> = ({
     if (user) {
       UpdateUser({ variables: { ...userData, id: user.id } });
       onClose();
+      refetchUsers();
     }
   };
 

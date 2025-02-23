@@ -1,12 +1,15 @@
-import { Button } from 'antd';
+import { Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import './HomeUser.less';
+import { useUser } from '../../context/AppContext';
+import CustomHeader from '../../components/CustomHeader';
 
 const HomeUser: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
   setIsAuthenticated,
 }) => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
@@ -14,13 +17,22 @@ const HomeUser: React.FC<{ setIsAuthenticated: (auth: boolean) => void }> = ({
     navigate('/login');
   };
 
+  const handleHomeUser = () => {
+    navigate('/home');
+  };
+
   return (
-    <div className="container">
-      <h1>HomeUser</h1>
-      <Button type="primary" onClick={handleLogout}>
-        Logout
-      </Button>
-    </div>
+    <Layout>
+      <CustomHeader
+        handleHomeUser={handleHomeUser}
+        handleLogout={handleLogout}
+        userRole={user?.role}
+      />
+
+      <Layout style={{ padding: '24px' }}>
+        <h1>Anduvo de re peluche</h1>
+      </Layout>
+    </Layout>
   );
 };
 
